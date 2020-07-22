@@ -3,7 +3,6 @@ import { NaTaBa } from "../NaTaBa";
 let old = 
 {
     refresh: Window_NameBox.prototype.refresh,
-    createContents: Window_NameBox.prototype.createContents,
     close: Window_NameBox.prototype.close,
     open: Window_NameBox.prototype.open,
     initialize: Window_NameBox.prototype.initialize,

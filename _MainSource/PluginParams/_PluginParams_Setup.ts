@@ -5,8 +5,6 @@ let pluginName = "CGT_NametagBackground_MV";
 let rawParams = PluginManager.parameters(pluginName);
 export let parsedParams: NaTaBaParams = convertParameters(rawParams);
 
-console.log(parsedParams);
-
 interface NaTaBaParams
 {
     'Graphic Width': number;
@@ -19,6 +17,3 @@ interface NaTaBaParams
     'Graphic X Offset': number;
     'Graphic Y Offset': number;
 }
-
-
-

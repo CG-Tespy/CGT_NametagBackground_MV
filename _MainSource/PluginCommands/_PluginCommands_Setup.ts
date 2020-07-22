@@ -19,7 +19,7 @@ let commands: RawCommandFunc[] =
         NaTaBa.params["Graphic Opacity"] = Number(args[0]);
     },
 
-    function SetNametagDynamicSizing(args: string[])
+    function SetFitGraphicToNametag(args: string[])
     {
         NaTaBa.params["Fit Graphic to Nametag"] = args[0].toLowerCase() === 'true';
     },
