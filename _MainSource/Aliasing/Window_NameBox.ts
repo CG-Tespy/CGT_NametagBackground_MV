@@ -16,6 +16,8 @@ let nameBoxChanges =
     {
         old.initialize.call(this, parentWindow);
         this.InitSprite();
+        this.ListenForGraphicNameChange();
+        setTimeout(this.PutSelfBehindMessageWindow.bind(this), 1000);
     },
 
     InitSprite()
@@ -24,24 +26,7 @@ let nameBoxChanges =
         this.UpdateSprite();
         this.addChildAt(this.bgSprite, 0);
     },
-
-    refresh(text: string, position: PIXI.Point | PIXI.ObservablePoint): string
-    {
-        // Note that this function doesn't execute when the name window is closed.
-        old.refresh.call(this, text, position);
-        
-        this.KeepBaseNametagGraphicTransparent();
-        // ^ So the custom one can show properly
-        this.UpdateSprite();
-        return '';
-    },
-
-    KeepBaseNametagGraphicTransparent(): void
-    {
-        this.opacity = 0;
-    },
-
-    // New funcs
+    
     UpdateSprite(): void
     {
         this.UpdateSpriteSize();
@@ -100,6 +85,57 @@ let nameBoxChanges =
         // ^Pixi Sprite alphas are in a 0-1 format, so we have to map the 0-255 value to 
         // something within that range, when applying it to the Pixi Sprite this works off of.
     },
+
+    ListenForGraphicNameChange()
+    {
+        NaTaBa.Events.GraphicChanged.AddListener(this.OnGraphicNameChange, this);
+    },
+
+    OnGraphicNameChange(oldName: string, newName: string)
+    {
+        this.LoadImageAsBGSpriteTexture(newName);
+    },
+
+    LoadImageAsBGSpriteTexture(imageName: string)
+    {
+        let bitmap = ImageManager.loadPicture(imageName);
+        let newTex = PIXI.Texture.from(bitmap.baseTexture);
+        this.bgSprite.texture = newTex;
+    },
+
+    PutSelfBehindMessageWindow(): void
+    {
+        // The nametag gets parented to the same scene that has a ref to the message
+        // window through the _messageWindow field...
+        let messageWindow: Window_Message = this.parent._messageWindow;
+        // ...though the message window's parent is the window layer attached to the scene.
+        let windowLayer: PIXI.Container = this.parent._windowLayer;
+
+        // With that in mind, we can get the child index of the message window, and thus set the
+        // nametag's child index accordingly
+        let messageWindowIndex = windowLayer.getChildIndex(messageWindow);
+
+        let newIndexForThis = messageWindowIndex + 1;
+        this.parent.setChildIndex(this, newIndexForThis);
+    },
+
+    refresh(text: string, position: PIXI.Point | PIXI.ObservablePoint): string
+    {
+        // Note that this function doesn't execute when the name window is closed.
+        old.refresh.call(this, text, position);
+        
+        this.KeepBaseNametagGraphicTransparent();
+        // ^ So the custom one can show properly
+        this.UpdateSprite();
+        return '';
+    },
+
+    KeepBaseNametagGraphicTransparent(): void
+    {
+        this.opacity = 0;
+    },
+
+    // New funcs
 
     close(): void
     {

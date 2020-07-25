@@ -11,9 +11,7 @@ interface NaTaBaParams
     'Graphic Height': number;
     'Graphic Opacity': number;
     'Fit Graphic to Nametag': boolean;
-    'Width Offset': number;
-    'Height Offset': number;
-    'Default Name Tag Graphic': string;
+    'Nametag Graphic': string;
     'Graphic X Offset': number;
     'Graphic Y Offset': number;
 }

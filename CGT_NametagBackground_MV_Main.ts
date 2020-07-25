@@ -37,19 +37,19 @@ building the source: https://github.com/CG-Tespy/CGT_NametagBackground_MV
 @default false
 @desc Whether the name box graphic's dimensions should be scaled to the nametag's dimensions.
 
-@param Default Name Tag Graphic
+@param Nametag Graphic
 @type file
 @dir img/system
 
 @param Graphic X Offset
 @type number
 @default 0
-@desc Positional offset of the name tag graphic on the X axis.
+@desc Positional offset of the Nametag graphic on the X axis.
 
 @param Graphic Y Offset
 @type number
 @default 0
-@desc Positional offset of the name tag graphic on the Y axis.
+@desc Positional offset of the Nametag graphic on the Y axis.
 
 */
 
