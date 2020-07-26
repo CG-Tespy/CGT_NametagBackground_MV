@@ -17,14 +17,15 @@ let nameBoxChanges =
         old.initialize.call(this, parentWindow);
         this.InitSprite();
         this.ListenForGraphicNameChange();
-        setTimeout(this.PutSelfBehindMessageWindow.bind(this), 1000);
+        let placementDelay = 500; // In milliseconds
+        setTimeout(this.PutSelfBehindMessageWindow.bind(this), placementDelay);
     },
 
     InitSprite()
     {
         this.bgSprite = PIXI.Sprite.from(NaTaBa.nametagGraphic.baseTexture);
-        this.UpdateSprite();
         this.addChildAt(this.bgSprite, 0);
+        this.UpdateSprite();
     },
     
     UpdateSprite(): void
@@ -105,18 +106,12 @@ let nameBoxChanges =
 
     PutSelfBehindMessageWindow(): void
     {
-        // The nametag gets parented to the same scene that has a ref to the message
-        // window through the _messageWindow field...
-        let messageWindow: Window_Message = this.parent._messageWindow;
-        // ...though the message window's parent is the window layer attached to the scene.
-        let windowLayer: PIXI.Container = this.parent._windowLayer;
-
-        // With that in mind, we can get the child index of the message window, and thus set the
-        // nametag's child index accordingly
-        let messageWindowIndex = windowLayer.getChildIndex(messageWindow);
-
-        let newIndexForThis = messageWindowIndex + 1;
-        this.parent.setChildIndex(this, newIndexForThis);
+        // This means making sure the name window has a high-enough index
+        // among the scene's children.
+        let scene: Scene_Base = this.parent;
+        scene.removeChild(this);
+        let highEnoughIndex = scene.children.length - 1;
+        scene.addChildAt(this, highEnoughIndex);
     },
 
     refresh(text: string, position: PIXI.Point | PIXI.ObservablePoint): string
