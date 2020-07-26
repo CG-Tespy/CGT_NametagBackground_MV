@@ -4,35 +4,62 @@ type RawCommandFunc = (args: string[]) => any;
 
 let commands: RawCommandFunc[] = 
 [
-    function SetNametagWidth(args: string[])
+    function CGT_NaTaBa_SetNametagWidth(args: string[])
     {
-        NaTaBa.params["Graphic Width"] = Number(args[0]);
+        let oldWidth = NaTaBa.params["Graphic Width"];
+        let newWidth = Number(args[0]);
+        NaTaBa.params["Graphic Width"] = newWidth;
+        NaTaBa.Events.WidthChanged.Invoke(oldWidth, newWidth);
     },
 
-    function SetNametagHeight(args: string[])
+    function CGT_NaTaBa_SetNametagHeight(args: string[])
     {
-        NaTaBa.params["Graphic Height"] = Number(args[0]);
+        let oldHeight = NaTaBa.params["Graphic Height"];
+        let newHeight = Number(args[0]);
+        NaTaBa.params["Graphic Height"] = newHeight;
+        NaTaBa.Events.HeightChanged.Invoke(oldHeight, newHeight);
     },
 
-    function SetNametagOpacity(args: string[])
+    function CGT_NaTaBa_SetNametagOpacity(args: string[])
     {
-        NaTaBa.params["Graphic Opacity"] = Number(args[0]);
+        let oldOpacity = NaTaBa.params["Graphic Opacity"];
+        let newOpacity = Number(args[0]);
+        NaTaBa.params["Graphic Opacity"] = newOpacity;
+        NaTaBa.Events.OpacityChanged.Invoke(oldOpacity, newOpacity);
     },
 
-    function SetFitGraphicToNametag(args: string[])
+    function CGT_NaTaBa_SetFitGraphicToNametag(args: string[])
     {
         NaTaBa.params["Fit Graphic to Nametag"] = args[0].toLowerCase() === 'true';
     },
 
-    function SetNametagWidthOffset(args: string[])
+    function CGT_NaTaBa_SetNametagGraphic(args: string[])
     {
-        NaTaBa.params["Width Offset"] = Number(args[0]);
+        let oldGraphicName = NaTaBa.params["Nametag Graphic"];
+        let newGraphicName = args[0];
+        NaTaBa.params["Nametag Graphic"] = newGraphicName;
+        NaTaBa.nametagGraphic = ImageManager.loadPicture(newGraphicName);
+        NaTaBa.Events.GraphicChanged.Invoke(oldGraphicName, newGraphicName);
+        // ^ The namebox should respond to this so the graphic change
+        // is shown to the player
     },
 
-    function SetNametagHeightOffset(args: string[])
+    function CGT_NaTaBa_SetGraphicXOffset(args: string[])
     {
-        NaTaBa.params["Height Offset"] = Number(args[0]);
+        let oldXOffset = NaTaBa.params["Graphic X Offset"];
+        let newXOffset = Number(args[0]);
+        NaTaBa.params["Graphic X Offset"] = newXOffset;
+        NaTaBa.Events.XOffsetChanged.Invoke(oldXOffset, newXOffset);
     },
+
+    function CGT_NaTaBa_SetGraphicYOffset(args: string[])
+    {
+        let oldYOffset = NaTaBa.params["Graphic X Offset"];
+        let newYOffset = Number(args[0]);
+        NaTaBa.params["Graphic Y Offset"] = newYOffset;
+        NaTaBa.Events.YOffsetChanged.Invoke(oldYOffset, newYOffset);
+    },
+
 ];
 
 GetCommandsRegistered();

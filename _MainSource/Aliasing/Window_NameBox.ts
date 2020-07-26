@@ -16,32 +16,18 @@ let nameBoxChanges =
     {
         old.initialize.call(this, parentWindow);
         this.InitSprite();
+        this.ListenForGraphicNameChange();
+        let placementDelay = 500; // In milliseconds
+        setTimeout(this.PutSelfBehindMessageWindow.bind(this), placementDelay);
     },
 
     InitSprite()
     {
         this.bgSprite = PIXI.Sprite.from(NaTaBa.nametagGraphic.baseTexture);
-        this.UpdateSprite();
         this.addChildAt(this.bgSprite, 0);
-    },
-
-    refresh(text: string, position: PIXI.Point | PIXI.ObservablePoint): string
-    {
-        // Note that this function doesn't execute when the name window is closed.
-        old.refresh.call(this, text, position);
-        
-        this.KeepBaseNametagGraphicTransparent();
-        // ^ So the custom one can show properly
         this.UpdateSprite();
-        return '';
     },
-
-    KeepBaseNametagGraphicTransparent(): void
-    {
-        this.opacity = 0;
-    },
-
-    // New funcs
+    
     UpdateSprite(): void
     {
         this.UpdateSpriteSize();
@@ -100,6 +86,51 @@ let nameBoxChanges =
         // ^Pixi Sprite alphas are in a 0-1 format, so we have to map the 0-255 value to 
         // something within that range, when applying it to the Pixi Sprite this works off of.
     },
+
+    ListenForGraphicNameChange()
+    {
+        NaTaBa.Events.GraphicChanged.AddListener(this.OnGraphicNameChange, this);
+    },
+
+    OnGraphicNameChange(oldName: string, newName: string)
+    {
+        this.LoadImageAsBGSpriteTexture(newName);
+    },
+
+    LoadImageAsBGSpriteTexture(imageName: string)
+    {
+        let bitmap = ImageManager.loadPicture(imageName);
+        let newTex = PIXI.Texture.from(bitmap.baseTexture);
+        this.bgSprite.texture = newTex;
+    },
+
+    PutSelfBehindMessageWindow(): void
+    {
+        // This means making sure the name window has a high-enough index
+        // among the scene's children.
+        let scene: Scene_Base = this.parent;
+        scene.removeChild(this);
+        let highEnoughIndex = scene.children.length - 1;
+        scene.addChildAt(this, highEnoughIndex);
+    },
+
+    refresh(text: string, position: PIXI.Point | PIXI.ObservablePoint): string
+    {
+        // Note that this function doesn't execute when the name window is closed.
+        old.refresh.call(this, text, position);
+        
+        this.KeepBaseNametagGraphicTransparent();
+        // ^ So the custom one can show properly
+        this.UpdateSprite();
+        return '';
+    },
+
+    KeepBaseNametagGraphicTransparent(): void
+    {
+        this.opacity = 0;
+    },
+
+    // New funcs
 
     close(): void
     {
