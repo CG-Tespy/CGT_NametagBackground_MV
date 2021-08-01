@@ -17,7 +17,7 @@ let nameBoxChanges =
         old.initialize.call(this, parentWindow);
         this.InitSprite();
         this.ListenForGraphicNameChange();
-        let placementDelay = 500; // In milliseconds
+        let placementDelay = 200; // In milliseconds
         setTimeout(this.PutSelfBehindMessageWindow.bind(this), placementDelay);
     },
 
