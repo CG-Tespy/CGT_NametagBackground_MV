@@ -4,7 +4,7 @@
 *
 * @author CG-Tespy https://github.com/CG-Tespy
 * 
-* @help This is version 1.01.03a of this plugin. This relies on the YEP_MessageCore and
+* @help This is version 1.01.04 of this plugin. This relies on the YEP_MessageCore and
 * CGT_CoreEngine (v1.01.03+) plugins.
 * 
 * Other contributors:
@@ -44,11 +44,13 @@
 * @param Graphic X Offset
 * @type number
 * @default 0
+* @min -999999
 * @desc Positional offset of the Nametag graphic on the X axis.
 * 
 * @param Graphic Y Offset
 * @type number
 * @default 0
+* @min -999999
 * @desc Positional offset of the Nametag graphic on the Y axis.
 * 
 */
@@ -58,7 +60,7 @@
 * @plugindesc Te deja usar un imágen entero como textura para el gráfico fondo de un gafete, en lugar de un window.png
 * @author CG-Tespy https://github.com/CG-Tespy
 * 
-* @help Versión 1.01.03a de este plugin. Esto necesita el YEP_MessageCore plugin y el 
+* @help Versión 1.01.04 de este plugin. Esto necesita el YEP_MessageCore plugin y el 
 * CGT_CoreEngine (v1.01.03+) plugin.
 * 
 * Otros colaboradores:
@@ -104,12 +106,14 @@
 * @text Compensación X de la Gráfica
 * @type number
 * @default 0
+* @min -999999
 * @desc Compensación posicional de la gráfica del gafete en el eje X.
 * 
 * @param Graphic Y Offset
 * @text Compensación Y de la Gráfica
 * @type number
 * @default 0
+* @min -999999
 * @desc Compensación posicional de la gráfica del gafete en el eje Y.
 * 
 */
