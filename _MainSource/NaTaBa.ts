@@ -4,7 +4,7 @@ let nameTagGraphicName = parsedParams["Nametag Graphic"];
 
 export let NaTaBa =
 {
-    version: "1.01.03",
+    version: "1.01.07",
     params: parsedParams,
     nametagGraphic: ImageManager.loadPicture(nameTagGraphicName),
     Events:
@@ -16,4 +16,6 @@ export let NaTaBa =
         XOffsetChanged: new CGT.Core.Utils.Event(2),
         YOffsetChanged: new CGT.Core.Utils.Event(2),
     },
+
+    isActive: true,
 };

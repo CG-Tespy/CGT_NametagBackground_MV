@@ -4,7 +4,7 @@
 *
 * @author CG-Tespy https://github.com/CG-Tespy
 * 
-* @help This is version 1.01.04 of this plugin. This relies on the YEP_MessageCore and
+* @help This is version 1.01.07 of this plugin. This relies on the YEP_MessageCore and
 * CGT_CoreEngine (v1.01.03+) plugins.
 * 
 * Other contributors:

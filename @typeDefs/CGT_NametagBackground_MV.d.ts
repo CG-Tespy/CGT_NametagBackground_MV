@@ -2,7 +2,7 @@ declare namespace CGT
 {
     namespace NaTaBa
     {
-        
+        let isActive: boolean;
         let version: number;
         let nameTagGraphic: Bitmap;
         namespace Events

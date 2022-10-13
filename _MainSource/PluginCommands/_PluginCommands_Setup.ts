@@ -60,6 +60,12 @@ let commands: RawCommandFunc[] =
         NaTaBa.Events.YOffsetChanged.Invoke(oldYOffset, newYOffset);
     },
 
+    function CGT_NaTaBa_SetActive(args: string[])
+    {
+        let shouldBeActive = args[0].toLowerCase() === 'true';
+        NaTaBa.isActive = shouldBeActive;
+    }
+
 ];
 
 GetCommandsRegistered();

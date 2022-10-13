@@ -1,4 +1,5 @@
 import { NaTaBa } from "../NaTaBa";
+import { fullyOpaqueForWindow, fullyOpaqueForSprite, fullyTransparent } from "../Shared/Shared";
 
 let old = 
 {
@@ -30,9 +31,33 @@ let nameBoxChanges =
     
     UpdateSprite(): void
     {
-        this.UpdateSpriteSize();
         this.UpdateSpriteOpacity();
-        this.UpdateSpritePosition();
+
+        if (NaTaBa.isActive)
+        {
+            this.UpdateSpriteSize();
+            this.UpdateSpritePosition();
+        }
+        else
+        {
+            this.ShowRegularNametagGraphic();
+        }
+    },
+
+    UpdateSpriteOpacity(): void
+    {
+        let newOpacity = this.GetSpriteOpacity();
+        this.bgSprite.alpha = newOpacity;
+    },
+
+    GetSpriteOpacity(): number
+    {
+        if (Yanfly.Param.MSGNameBoxClear == true || !NaTaBa.isActive)
+            return fullyTransparent;
+        else
+            return NaTaBa.params["Graphic Opacity"] / 255.0;
+        // ^Pixi Sprite alphas are in a 0-1 format, so we have to map the 0-255 value to 
+        // something within that range, when applying it to the Pixi Sprite this works off of.
     },
 
     UpdateSpriteSize(): void
@@ -65,26 +90,10 @@ let nameBoxChanges =
         return correctSize;
     },
 
-    UpdateSpriteOpacity(): void
-    {
-        let newOpacity = this.GetSpriteOpacity();
-        this.bgSprite.alpha = newOpacity;
-    },
-
     UpdateSpritePosition(): void
     {
         this.bgSprite.x = NaTaBa.params["Graphic X Offset"];
         this.bgSprite.y = NaTaBa.params["Graphic Y Offset"];
-    },
-
-    GetSpriteOpacity(): number
-    {
-        if (Yanfly.Param.MSGNameBoxClear == true)
-            return 0;
-        else
-            return NaTaBa.params["Graphic Opacity"] / 255.0;
-        // ^Pixi Sprite alphas are in a 0-1 format, so we have to map the 0-255 value to 
-        // something within that range, when applying it to the Pixi Sprite this works off of.
     },
 
     ListenForGraphicNameChange()
@@ -106,12 +115,12 @@ let nameBoxChanges =
 
     PutSelfBehindMessageWindow(): void
     {
-        // This means making sure the name window has a high-enough index
+        // This means making sure the name window has the right index
         // among the scene's children.
         let scene: Scene_Base = this.parent;
         scene.removeChild(this);
-        let highEnoughIndex = 1;
-        scene.addChildAt(this, highEnoughIndex);
+        let behindMessageWindow = 1;
+        scene.addChildAt(this, behindMessageWindow);
     },
 
     refresh(text: string, position: PIXI.Point | PIXI.ObservablePoint): string
@@ -119,15 +128,22 @@ let nameBoxChanges =
         // Note that this function doesn't execute when the name window is closed.
         old.refresh.call(this, text, position);
         
-        this.KeepBaseNametagGraphicTransparent();
-        // ^ So the custom one can show properly
+        if (NaTaBa.isActive)
+            this.KeepBaseNametagGraphicTransparent();
+            // ^ So the custom one can show properly
+            
         this.UpdateSprite();
         return '';
     },
 
+    ShowRegularNametagGraphic()
+    {
+        this.opacity = fullyOpaqueForWindow;
+    },
+
     KeepBaseNametagGraphicTransparent(): void
     {
-        this.opacity = 0;
+        this.opacity = fullyTransparent;
     },
 
     // New funcs
@@ -135,7 +151,7 @@ let nameBoxChanges =
     close(): void
     {
         old.close.call(this);
-        this.bgSprite.alpha = 0;
+        this.bgSprite.alpha = fullyTransparent;
     },
 
     open(): void
