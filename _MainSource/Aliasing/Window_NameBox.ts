@@ -110,7 +110,7 @@ let nameBoxChanges =
         // among the scene's children.
         let scene: Scene_Base = this.parent;
         scene.removeChild(this);
-        let highEnoughIndex = scene.children.length - 1;
+        let highEnoughIndex = 1;
         scene.addChildAt(this, highEnoughIndex);
     },
 
