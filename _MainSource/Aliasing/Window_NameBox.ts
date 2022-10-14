@@ -1,5 +1,6 @@
 import { NaTaBa } from "../NaTaBa";
 import { fullyOpaqueForWindow, fullyOpaqueForSprite, fullyTransparent } from "../Shared/Shared";
+import { ZPositioning } from "../Structures/ZPositioning";
 
 let old = 
 {
@@ -16,10 +17,12 @@ let nameBoxChanges =
     initialize(parentWindow: Window_Message)
     {
         old.initialize.call(this, parentWindow);
+        NaTaBa.yanflyNameWindow = this;
         this.InitSprite();
         this.ListenForGraphicNameChange();
         let placementDelay = 200; // In milliseconds
-        setTimeout(this.PutSelfBehindMessageWindow.bind(this), placementDelay);
+        setTimeout(this.UpdateZPositioning.bind(this), placementDelay);
+        // ^Since nameboxes don't get attached to parents right away
     },
 
     InitSprite()
@@ -108,19 +111,30 @@ let nameBoxChanges =
 
     LoadImageAsBGSpriteTexture(imageName: string)
     {
-        let bitmap = ImageManager.loadPicture(imageName);
+        let bitmap = ImageManager.loadSystem(imageName);
         let newTex = PIXI.Texture.from(bitmap.baseTexture);
         this.bgSprite.texture = newTex;
     },
 
-    PutSelfBehindMessageWindow(): void
+    UpdateZPositioning(): void
     {
-        // This means making sure the name window has the right index
-        // among the scene's children.
         let scene: Scene_Base = this.parent;
         scene.removeChild(this);
-        let behindMessageWindow = 1;
-        scene.addChildAt(this, behindMessageWindow);
+        let zIndex = this.DecideZIndexRelativeTo(scene);
+        
+        scene.addChildAt(this, zIndex);
+    },
+
+    DecideZIndexRelativeTo(this: Window_NameBox, scene: Scene_Base)
+    {
+        let behindIndex = 1;
+        let frontIndex = scene.children.length - 1;
+        let indexToGoWith = 0;
+
+        if (CGT.NaTaBa.params["Z Positioning"] == ZPositioning.Front)
+            indexToGoWith = frontIndex;
+        else
+            indexToGoWith = behindIndex;
     },
 
     refresh(text: string, position: PIXI.Point | PIXI.ObservablePoint): string

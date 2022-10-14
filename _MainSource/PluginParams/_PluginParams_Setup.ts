@@ -1,9 +1,8 @@
-import { convertParameters } from "fenix-tools";
 
-let pluginName = "CGT_NametagBackground_MV";
+import { pluginName } from "../Shared/Shared";
+import { ZPositioning } from "../Structures/ZPositioning";
 
 let rawParams = PluginManager.parameters(pluginName);
-//export let parsedParams: NaTaBaParams = convertParameters(rawParams);
 
 let paramNames = 
 {
@@ -14,6 +13,7 @@ let paramNames =
     NametagGraphic: 'Nametag Graphic',
     GraphicXOffset: 'Graphic X Offset',
     GraphicYOffset: 'Graphic Y Offset',
+    ZPositioning: 'Z Positioning',
 };
 
 export let parsedParams: NaTaBaParams = 
@@ -26,9 +26,11 @@ export let parsedParams: NaTaBaParams =
     'Fit Graphic to Nametag': rawParams[paramNames.FitGraphicToNametag] === 'true',
 
     'Nametag Graphic': rawParams[paramNames.NametagGraphic],
-    
+
     'Graphic X Offset': Number(rawParams[paramNames.GraphicXOffset]),
     'Graphic Y Offset': Number(rawParams[paramNames.GraphicYOffset]),
+
+    'Z Positioning': rawParams[paramNames.ZPositioning] || ZPositioning.Behind,
 };
 
 interface NaTaBaParams
@@ -44,6 +46,8 @@ interface NaTaBaParams
 
     'Graphic X Offset': number;
     'Graphic Y Offset': number;
+
+    'Z Positioning': ZPositioning;
 }
 
 

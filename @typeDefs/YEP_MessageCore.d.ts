@@ -9,11 +9,12 @@ declare class Window_NameBox extends Window_Base
     DisplayedNewName: CGT.Core.Utils.Event;
     ShowedUp: CGT.Core.Utils.Event;
     Deactivated: CGT.Core.Utils.Event;
+
+    UpdateZPositioning(): void;
 }
 
 declare namespace Yanfly
 {
-    let nameWindow: Window_NameBox;
     let Param:
     {
         MSGNameBoxClear: boolean

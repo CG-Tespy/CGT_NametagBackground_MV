@@ -4,7 +4,7 @@
 *
 * @author CG-Tespy https://github.com/CG-Tespy
 * 
-* @help This is version 1.01.07 of this plugin. This relies on the YEP_MessageCore and
+* @help This is version 1.02.03 of this plugin. This relies on the YEP_MessageCore and
 * CGT_CoreEngine (v1.01.03+) plugins.
 * 
 * Other contributors:
@@ -53,6 +53,12 @@
 * @min -999999
 * @desc Positional offset of the Nametag graphic on the Y axis.
 * 
+* @param Z Positioning
+* @desc Whether the graphic should will be shown in front of the message box or behind it.
+* @type select
+* @option Front
+* @option Behind
+* @default Front
 */
 
 /*:es
@@ -60,7 +66,7 @@
 * @plugindesc Te deja usar un imágen entero como textura para el gráfico fondo de un gafete, en lugar de un window.png
 * @author CG-Tespy https://github.com/CG-Tespy
 * 
-* @help Versión 1.01.04 de este plugin. Esto necesita el YEP_MessageCore plugin y el 
+* @help Versión 1.02.03 de este plugin. Esto necesita el YEP_MessageCore plugin y el 
 * CGT_CoreEngine (v1.01.03+) plugin.
 * 
 * Otros colaboradores:
@@ -116,6 +122,13 @@
 * @min -999999
 * @desc Compensación posicional de la gráfica del gafete en el eje Y.
 * 
+* @param Z Positioning
+* @text Posicional Z
+* @desc Si o no la gráfica se mostrará en frente o detrás del cuadro de diálogo.
+* @type select
+* @option Front
+* @option Behind
+* @default Front
 */
 
 "use strict";

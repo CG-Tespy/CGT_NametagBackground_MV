@@ -4,7 +4,7 @@ let nameTagGraphicName = parsedParams["Nametag Graphic"];
 
 export let NaTaBa =
 {
-    version: "1.01.07",
+    version: "1.02.03",
     params: parsedParams,
     nametagGraphic: ImageManager.loadPicture(nameTagGraphicName),
     Events:
@@ -18,4 +18,7 @@ export let NaTaBa =
     },
 
     isActive: true,
+
+    yanflyNameWindow: null,
+
 };

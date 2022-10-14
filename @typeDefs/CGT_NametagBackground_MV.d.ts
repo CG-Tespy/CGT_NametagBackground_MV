@@ -24,7 +24,15 @@ declare namespace CGT
             'Nametag Graphic': string;
             'Graphic X Offset': number;
             'Graphic Y Offset': number;
+            'Z Positioning': ZPositioning;
         }
+
+        enum ZPositioning 
+        {
+            Front = "Front", Behind = "Behind"
+        }
+
+        let yanflyNameWindow: Window_NameBox;
     }
     
 }

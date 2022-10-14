@@ -1,4 +1,5 @@
 import { NaTaBa } from '../NaTaBa';
+import { ZPositioning } from '../Structures/ZPositioning';
 
 type RawCommandFunc = (args: string[]) => any;
 
@@ -64,7 +65,18 @@ let commands: RawCommandFunc[] =
     {
         let shouldBeActive = args[0].toLowerCase() === 'true';
         NaTaBa.isActive = shouldBeActive;
-    }
+    },
+
+    function CGT_NaTaBa_SetZPositioning(args: string[])
+    {
+        let positioning: ZPositioning = args[0].toLowerCase() as ZPositioning;
+        positioning = (positioning.charAt(0).toUpperCase() + positioning.slice(1)) as ZPositioning;
+        // ^For proper comparison to the enum
+
+        NaTaBa.params['Z Positioning'] = positioning;
+        let yanflyNameWindow: Window_NameBox = NaTaBa.yanflyNameWindow;
+        yanflyNameWindow.UpdateZPositioning();
+    },
 
 ];
 

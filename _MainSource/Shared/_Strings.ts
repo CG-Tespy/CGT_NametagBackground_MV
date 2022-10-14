@@ -1,0 +1,1 @@
+export let pluginName = "CGT_NametagBackground_MV";
