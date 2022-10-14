@@ -16,22 +16,29 @@ let paramNames =
     ZPositioning: 'Z Positioning',
 };
 
-export let parsedParams: NaTaBaParams = 
+export let parsedParams = GetParsedParams();
+
+function GetParsedParams()
 {
-    'Graphic Width': Number(rawParams[paramNames.GraphicWidth]),
-    'Graphic Height': Number(rawParams[paramNames.GraphicHeight]),
+    let parsedParams: NaTaBaParams = 
+    {
+        'Graphic Width': Number(rawParams[paramNames.GraphicWidth]) || 100,
+        'Graphic Height': Number(rawParams[paramNames.GraphicHeight]) || 100,
 
-    'Graphic Opacity': Number(rawParams[paramNames.GraphicOpacity]),
+        'Graphic Opacity': Number(rawParams[paramNames.GraphicOpacity]) || 192,
 
-    'Fit Graphic to Nametag': rawParams[paramNames.FitGraphicToNametag] === 'true',
+        'Fit Graphic to Nametag': rawParams[paramNames.FitGraphicToNametag] === 'true',
 
-    'Nametag Graphic': rawParams[paramNames.NametagGraphic],
+        'Nametag Graphic': rawParams[paramNames.NametagGraphic],
 
-    'Graphic X Offset': Number(rawParams[paramNames.GraphicXOffset]),
-    'Graphic Y Offset': Number(rawParams[paramNames.GraphicYOffset]),
+        'Graphic X Offset': Number(rawParams[paramNames.GraphicXOffset]) || 0,
+        'Graphic Y Offset': Number(rawParams[paramNames.GraphicYOffset]) || 0,
 
-    'Z Positioning': rawParams[paramNames.ZPositioning] || ZPositioning.Behind,
-};
+        'Z Positioning': rawParams[paramNames.ZPositioning] || ZPositioning.Behind,
+    };
+
+    return parsedParams;
+}
 
 interface NaTaBaParams
 {

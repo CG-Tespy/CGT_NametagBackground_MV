@@ -5,7 +5,7 @@
 * @author CG-Tespy https://github.com/CG-Tespy
 * 
 * @help This is version 1.02.03 of this plugin. This relies on the YEP_MessageCore and
-* CGT_CoreEngine (v1.01.03+) plugins.
+* CGT_CoreEngine (v1.01.17+) plugins.
 * 
 * Other contributors:
 * FeniXTools - FeniXEngine Contributors
@@ -58,7 +58,7 @@
 * @type select
 * @option Front
 * @option Behind
-* @default Front
+* @default Behind
 */
 
 /*:es
@@ -67,7 +67,7 @@
 * @author CG-Tespy https://github.com/CG-Tespy
 * 
 * @help Versión 1.02.03 de este plugin. Esto necesita el YEP_MessageCore plugin y el 
-* CGT_CoreEngine (v1.01.03+) plugin.
+* CGT_CoreEngine (v1.01.17+) plugin.
 * 
 * Otros colaboradores:
 * FeniXTools - FeniXEngine Colaboradores
@@ -128,7 +128,7 @@
 * @type select
 * @option Front
 * @option Behind
-* @default Front
+* @default Behind
 */
 
 "use strict";

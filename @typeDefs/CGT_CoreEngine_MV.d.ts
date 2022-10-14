@@ -3,7 +3,7 @@ declare namespace CGT
     
     namespace Core
     {
-        let version: number
+        let version: string
 
         namespace Audio
         {
@@ -71,6 +71,45 @@ declare namespace CGT
                 static get DefaultPan(): number;
 
                 static get Null(): Readonly<Sound>;
+
+            }
+        }
+
+        namespace Battle
+        {
+            /**
+             * Contains info relating to some skill being landed. 
+             */
+            export class DamageArgs
+            {
+                /** Skill used to do the damage, if applicable. */
+                get Skill(): RPG.Skill;
+
+                /** Item used to do the damage, if applicable. */
+                get Item(): RPG.Item;
+
+                /** The battler that used the skill. */
+                get User(): Game_Battler;
+
+                /** Whether or not a crit was landed. */
+                get LandedCrit(): boolean;
+
+                /** The target's Game_ActionResult object. Same as calling Target.result() */
+                get Result(): Game_ActionResult;
+
+                /** How much damage the skill dealt to the target. */
+                get HPDamageDealt(): number;
+                get MPDamageDealt(): number;
+                get TPDamageDealt(): number;
+
+                /** States successfully applied to the target by the Skill. */
+                get StatesApplied(): RPG.State[] ;
+
+                /** The battlers that got damaged. */
+                get Target(): Game_Battler;
+
+
+                static From(target: Game_Battler, action: Game_Action): DamageArgs
 
             }
         }
@@ -252,65 +291,108 @@ declare namespace CGT
                 static SubjectAsActor(action: Game_Action): Game_Actor
             }
 
-            namespace Items
+            class Game_ActorEx
             {
-                class RPGItemEx
-                {
+                static CanPaySkillCost(actor: Game_Actor, skill: RPG.Skill, 
+                    howManyTimes?: number): boolean
 
-                }
-
-                enum EffectCodes
-                {
-                    HPHeal = 11,
-                    MPHeal = 12,
-                    TPHeal = 13,
-                    AddState = 21,
-                    RemoveState = 22,
-                    AddBuff = 31,
-                    AddDebuff = 32,
-                    RemoveBuff = 33,
-                    RemoveDebuff = 34,
-                    SpecialEffect = 41,
-                    Grow = 42,
-                    LearnSkill = 43,
-                    CommonEvent = 44,
-                }
-
-                
-                class HealEffects
-                {
-                    hp: RPG.Effect[];
-                    mp: RPG.Effect[];
-                    tp: RPG.Effect[];
-
-                    /** Creates an instance of this from the effects of the passed item. */
-                    static OfItem(item: RPG.Item): HealEffects
-
-                    /**
-                     * Registers any legit healing effects in the array passed. Returns true if
-                     * any were legit, false otherwise.
-                     * @param effects 
-                     */
-                    RegisterMultiple(effects: RPG.Effect[]): Boolean
-
-                    /**
-                     * If the passed effect is a legit healing effect, it gets registered as the right
-                     * type in this instance, returning true. Returns false otherwise.
-                     */
-                    Register(eff: RPG.Effect): Boolean
-
-                    private IsLegitHealingEffect(effect: RPG.Effect)
-
-                    private static Codes: Readonly<number[]>;
-
-                    /** Whether or not this has any effects registered. */
-                    Any(): Boolean
-
-                    static Null: Readonly<HealEffects>;
-                    
-                }
+                static IsAtFullHP(actor: Game_Actor): boolean
+                static IsAtFullMP(actor: Game_Actor): boolean
+                static IsAtFullTP(actor: Game_Actor): boolean
             }
 
+            /** Makes it easier to work with Items. */
+            class RPGItemEx
+            {
+                static UseItemOnActor(itemInInventory: RPG.Item, actor: Game_Actor): void
+
+                /**
+                 * Uses the item on the actor without consuming it.
+                 */
+                static FreeUseItemOnActor(itemInInventory: RPG.Item, actor: Game_Actor): void
+
+                private static ApplyItemUseOnActor(itemUse: Game_Action): void
+
+                static ForceUseItemOnActor(item: RPG.Item, actor: Game_Actor): void
+
+                static HPHealingItemsIn(items: RPG.Item[]): RPG.Item[]
+
+                /** Returns whether the item's damage type is HP Recovery. */
+                static CanHealHP(item: RPG.Item): boolean
+
+                /** Returns whether the item's damage type is MP Recovery. */
+                static CanHealMP(item: RPG.Item): boolean
+
+                static FlatHPAmountHealed(item: RPG.Item): number
+
+                static PercentHPAmountHealed(item: RPG.Item): number
+
+                /*
+                Returns the passed array with the use-disallowed items filtered out.
+                */
+                static UsablesOnly(items: RPG.Item[]): RPG.Item[]
+
+                /**
+                 * Returns teh passed array with the non-overworld-usable items filtered out.
+                 */
+                static OverworldUsablesOnly(items: RPG.Item[]): RPG.Item[]
+            }
+
+            /**
+             * Makes it easier to work with Skills.
+             */
+            class RPGSkillEx
+            {
+                /** Returns whether the skill's damage type is HP Recovery. */
+                static CanHealHP(item: RPG.Skill): boolean
+
+                /** Returns whether the skill's damage type is MP Recovery. */
+                static CanHealMP(item: RPG.Skill): boolean
+
+                static OnlyHealsHP(skill: RPG.Skill): boolean
+                /**
+                 * Returns false if the skill is not single-targeting, or if
+                 * the user can't pay the cost. True otherwise.
+                 */
+                static UseSkillOnActor(skill: RPG.Skill, user: Game_Actor, 
+                    target: Game_Actor): boolean
+
+                /**
+                 * Has the user cast the skill on the target without paying the cost.
+                 * Returns false if the skill isn't single-targeting, or if the user can't
+                 * legit use the skill. True otherwise.
+                 */
+                static FreeUseSkillOnActor(skill: RPG.Skill, user: Game_Actor, target: Game_Actor): boolean
+
+                /**
+                 * Returns false if the user can't pay the cost for applying
+                 * the skill to the targets. True otherwise.
+                 */
+                static UseSkillOnActors(skill: RPG.Skill, user: Game_Actor, 
+                    targets: Game_Actor[]): boolean
+
+                /**
+                 * Has the user cast the skill on each target, without paying the cost.
+                 * Returns false if the user can't use the skill legitimately.
+                 * True otherwise.
+                 */
+                static FreeUseSkillOnActors(skill: RPG.Skill, user: Game_Actor, targets: Game_Actor[]): boolean
+                
+                /**
+                 * Returns true if the user can pay the skill cost the specified
+                 * number of times (1 by default). False otherwise.
+                 */
+                static CanPaySkillCost(skill: RPG.Skill, user: Game_Actor, 
+                    howManyTimes?: number): boolean
+
+                static IsSingleTargeting(skill: RPG.Skill): boolean
+                static IsAllTargeting(skill: RPG.Skill): boolean
+
+                static UseSkillOnActors(skill: RPG.Skill, user: Game_Actor, 
+                    targets: Game_Actor[]): void
+            }
+
+            /** Contains static functions for working with numbers. */
             class NumberEx
             {
                 static Clamp(num: number, min: number, max: number): number
@@ -336,6 +418,40 @@ declare namespace CGT
             
                 static ResizeWhileKeepingAspectFor(sprite: PIXI.Sprite, targetWidth: 
                     number, targetHeight: number): void
+            }
+
+            class PluginParamEx 
+            {
+                // For those stringified num arrs that the PluginManager has them start as
+                static DatabaseElementsFromStringNumArr<TDatabaseElement extends RPG.Actor |
+                RPG.Class | RPG.Skill | RPG.Item |
+                RPG.Weapon | RPG.Armor | RPG.Enemy |
+                RPG.Troop | RPG.State | RPG.Animation |
+                RPG.Tileset | RPG.CommonEvent >(stringifiedNumArr: string, 
+                                                databaseElemArr: TDatabaseElement[]): 
+                                                TDatabaseElement[]
+
+                static DatabaseElementsFromNumArr<TDatabaseElement extends RPG.Actor |
+                RPG.Class | RPG.Skill | RPG.Item |
+                RPG.Weapon | RPG.Armor | RPG.Enemy |
+                RPG.Troop | RPG.State | RPG.Animation |
+                RPG.Tileset | RPG.CommonEvent >(numArr: number[], 
+                                                databaseElemArr: TDatabaseElement[]):
+                                                TDatabaseElement[]
+
+                static NumArrFromString(input: string): number[]
+
+                /** Takes into account variable codes (a la \V[x]) */
+                static ParamArgToNumber(paramArg: string): number
+            }
+
+            class StringEx 
+            {
+                /** 
+                 * Like Python's Capitalize method: returns a copy of the string with the
+                 * first letter capitalized and the rest in lowercase.
+                 */
+                static Capitalize(input: string): string
             }
 
         }
@@ -585,14 +701,12 @@ declare namespace CGT
 
         namespace PluginCommands
         {
-
-            interface RawCommandFunc
-            {
-                (args: string[]): any;
-            }
+            type RawCommandFunc = (args: string[]) => any;
 
             let commandMap: Map<string, RawCommandFunc>;
             function Register(commandName: string, func: RawCommandFunc): void;
+            /** The strings are the command names */
+            function RegisterMulti(toRegister: Map<string, RawCommandFunc>);
         }
 
         namespace PluginParams
@@ -600,11 +714,11 @@ declare namespace CGT
             class PluginParamObjectFactory<TReal, TParsedRaw>
             {
                 static get ClassOfObjectCreated(): Function
-                
                 get ClassOfObjectCreated(): any
 
-                protected paramToCreateFrom: string;
+                /** The plugin param with its surface members destringified. */
                 protected parsedParam: TParsedRaw;
+                // The instance of the custom class you set up based on parsedParam
                 protected baseObject: TReal;
 
                 CreateObjectFrom(param: string): TReal
@@ -614,6 +728,8 @@ declare namespace CGT
 
                 protected ApplyParamValuesToBaseObject(): void
                 protected ApplyPrimitiveValues(): void
+
+                // These are the hooks
                 protected ApplyBooleans(): void
                 protected ApplyNumbers(): void
                 protected ApplyStrings(): void
@@ -625,6 +741,176 @@ declare namespace CGT
 
             }
 
+        }
+
+        /**
+         * Utility code to make it easier to work with certain builtins that
+         * are in MV's RPG namespace.
+         */
+        namespace RPGEx
+        {
+            enum EffectCodes
+            {
+                HPHeal,
+                MPHeal,
+                TPHeal,
+                AddState,
+                RemoveState,
+                AddBuff,
+                AddDebuff,
+                RemoveBuff,
+                RemoveDebuff,
+                SpecialEffect,
+                Grow,
+                LearnSkill,
+                CommonEvent,
+            }
+
+            enum Occasion
+            {
+                Always = 0, 
+                BattleOnly = 1, 
+                MenuOnly = 2, 
+                Never = 3
+            }
+
+            enum DamageType
+            {
+                None = 0,
+                HPDamage = 1,
+                MPDamage = 2,
+                HPRecovery = 3,
+                MPRecovery = 4,
+                HPDrain = 5,
+                MPDrain = 6
+            }
+
+            /** Targeting scope of skills and items. */
+            enum Scope
+            {
+                None = 0, 
+
+                OneEnemy = 1, 
+                AllEnemies = 2, 
+
+                OneRandEnemy = 3, 
+                TwoRandEnemy = 4, 
+                ThreeRandEnemy = 5, 
+                FourRandEnemy = 6,
+
+                OneAlly = 7,
+                AllAllies = 8,
+                OneAllyDead = 9,
+                AllAlliesDead = 10,
+
+                TheUser = 11
+            }
+
+            /**
+             * The values are based off the codes the effect types are assigned
+             * in the base Effect class.
+             */
+            enum EffectType
+            {
+                Null = -1,
+                HPHeal = 11,
+                MPHeal = 12, 
+                TPGain = 13,
+                AddState = 21,
+                RemoveState = 22,
+                AddBuff = 31,
+                AddDebuff = 32,
+                RemoveBuff = 33,
+                RemoveDebuff = 34,
+                SpecialEffect = 41,
+                Grow = 42,
+                LearnSkill = 43,
+                CommonEvent = 44
+            }
+
+            enum HitType
+            {
+                Null = -1,
+                CertainHit = 0,
+                Physical = 1,
+                Magical = 2
+            }
+
+            /**
+            * Represents state for effects that recover HP, MP, or TP.
+            */
+            class HealEffect extends UseEffect
+            {
+                get PercentRecovery(): number
+                get FlatRecovery(): number
+
+                set PercentRecovery(value: number)
+                set FlatRecovery(value: number)
+
+                protected static validCodes: EffectType;
+
+                static Null: Readonly<HealEffect>;
+                
+            }
+            
+            /**
+             * Encapsulates basic healing effects involving, HP, MP, or TP
+             */
+            class HealEffectSet
+            {
+                hp: HealEffect[];
+                mp: HealEffect[];
+                tp: HealEffect[];
+
+                /** Creates an instance of this from the effects of the passed item. */
+                static FromItem(item: RPG.Item): HealEffectSet
+
+                /**
+                 * Registers any legit healing effects in the array passed. Returns true if
+                 * any were legit, false otherwise.
+                 * @param effects 
+                 */
+                RegisterMultiple(effects: RPG.Effect[]): Boolean
+
+                /**
+                 * If the passed effect is a legit healing effect, it gets registered as the right
+                 * type in this instance, returning true. Returns false otherwise.
+                 */
+                Register(eff: RPG.Effect): Boolean
+
+                /** Whether or not this has any effects registered. */
+                Any(): Boolean
+
+                static Null: Readonly<HealEffectSet>;
+                
+            }
+
+            enum ItemType
+            {
+                Regular = 1, 
+                Key = 2, 
+                HiddenA = 3, 
+                HiddenB = 4
+            }
+
+            /**
+             * Wrapper for MV's Effect class, which represents effects
+             * you can set up in an Item's or Skill's effect settings.
+             */
+            class UseEffect implements RPG.Effect
+            {
+                code: number;
+                dataId: number;
+                value1: number;
+                value2: number;
+
+                get Type(): EffectType
+
+                static FromDBEffect(dbEffect: RPG.Effect): UseEffect
+
+                static Null: Readonly<UseEffect>;
+                
+            }
         }
 
         namespace Text
@@ -669,6 +955,17 @@ declare namespace CGT
                 BattleEnd: Utils.Event;
                 DamageExecute: Utils.Event;
                 EnemyDeath: Utils.Event;
+
+                /** 1 arg: SkillHitArgs */
+                CriticalHit: Utils.Event;
+                /** 1 arg: SkillHitArgs */
+                AttackResisted: Utils.Event;
+                /** 1 arg: SkillHitArgs */
+                AttackNulled: Utils.Event;
+                /** 1 arg: SkillHitArgs */
+                WeaknessExploited: Utils.Event;
+                /** 1 arg: SkillHitArgs */
+                StateApplied: Utils.Event;
             };
 
             interface IEquatable<T>

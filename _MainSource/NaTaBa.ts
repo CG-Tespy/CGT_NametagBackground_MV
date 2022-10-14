@@ -1,4 +1,4 @@
-import { parsedParams } from './PluginParams/_PluginParams_Setup';
+import {parsedParams } from './PluginParams/_PluginParams_Setup';
 
 let nameTagGraphicName = parsedParams["Nametag Graphic"];
 

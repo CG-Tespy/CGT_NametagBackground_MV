@@ -2,13 +2,14 @@ import { NaTaBa } from '../NaTaBa';
 import { ZPositioning } from '../Structures/ZPositioning';
 
 type RawCommandFunc = (args: string[]) => any;
+let ParamArgToNumber = CGT.Core.Extensions.PluginParamEx.ParamArgToNumber;
 
 let commands: RawCommandFunc[] = 
 [
     function CGT_NaTaBa_SetNametagWidth(args: string[])
     {
         let oldWidth = NaTaBa.params["Graphic Width"];
-        let newWidth = Number(args[0]);
+        let newWidth = ParamArgToNumber(args[0]);
         NaTaBa.params["Graphic Width"] = newWidth;
         NaTaBa.Events.WidthChanged.Invoke(oldWidth, newWidth);
     },
@@ -16,7 +17,7 @@ let commands: RawCommandFunc[] =
     function CGT_NaTaBa_SetNametagHeight(args: string[])
     {
         let oldHeight = NaTaBa.params["Graphic Height"];
-        let newHeight = Number(args[0]);
+        let newHeight = ParamArgToNumber(args[0]);
         NaTaBa.params["Graphic Height"] = newHeight;
         NaTaBa.Events.HeightChanged.Invoke(oldHeight, newHeight);
     },
@@ -24,7 +25,7 @@ let commands: RawCommandFunc[] =
     function CGT_NaTaBa_SetNametagOpacity(args: string[])
     {
         let oldOpacity = NaTaBa.params["Graphic Opacity"];
-        let newOpacity = Number(args[0]);
+        let newOpacity = ParamArgToNumber(args[0]);
         NaTaBa.params["Graphic Opacity"] = newOpacity;
         NaTaBa.Events.OpacityChanged.Invoke(oldOpacity, newOpacity);
     },
@@ -48,7 +49,7 @@ let commands: RawCommandFunc[] =
     function CGT_NaTaBa_SetGraphicXOffset(args: string[])
     {
         let oldXOffset = NaTaBa.params["Graphic X Offset"];
-        let newXOffset = Number(args[0]);
+        let newXOffset = ParamArgToNumber(args[0]);
         NaTaBa.params["Graphic X Offset"] = newXOffset;
         NaTaBa.Events.XOffsetChanged.Invoke(oldXOffset, newXOffset);
     },
@@ -56,7 +57,7 @@ let commands: RawCommandFunc[] =
     function CGT_NaTaBa_SetGraphicYOffset(args: string[])
     {
         let oldYOffset = NaTaBa.params["Graphic X Offset"];
-        let newYOffset = Number(args[0]);
+        let newYOffset = ParamArgToNumber(args[0]);
         NaTaBa.params["Graphic Y Offset"] = newYOffset;
         NaTaBa.Events.YOffsetChanged.Invoke(oldYOffset, newYOffset);
     },

@@ -135,6 +135,8 @@ let nameBoxChanges =
             indexToGoWith = frontIndex;
         else
             indexToGoWith = behindIndex;
+
+        return indexToGoWith;
     },
 
     refresh(text: string, position: PIXI.Point | PIXI.ObservablePoint): string
