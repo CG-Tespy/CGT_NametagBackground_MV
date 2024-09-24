@@ -13,7 +13,7 @@
   "dependencies": {},
   "devDependencies": {
     "fenix-tools": "^0.3.0-b",
-    "rollup": "^2.00.1",
+    "rollup": "^3.29.5",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-pluginutils": "^2.8.2",
     "typescript": "^3.9.6"
